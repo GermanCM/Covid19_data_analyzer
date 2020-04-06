@@ -12,5 +12,20 @@ ___
 
 The application is divided into several blocks; the first one shows the Covid19 data evolution worldwide:
 
-
 ![](gifs\map_gif.gif)
+
+In addition to this map visualization, you can have a look at several coutnries evolution at once with the following line charts:
+
+![](gifs\line_charts_gif.gif)
+
+___
+
+It is important to know that the main goal of this app is to get some additional insights based on a fair comparison between countries, and not only based on raw numbers; that is the reason for the page showing normalized data, based on different criteria as:
+- population data by country
+- elderly ratio by country
+- ...
+
+![](gifs\normalized_bar_charts_gif.gif)
+
+And this is just a few examples of what you can see in the application.
+New ideas and sharing knowledge is all welcome :)
