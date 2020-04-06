@@ -13,4 +13,4 @@ ___
 The application is divided into several blocks; the first one shows the Covid19 data evolution worldwide:
 
 
-![] (gifs\map_gif.gif)
+![](https://github.com/GermanCM/Covid19_data_analyzer/blob/dev/gifs/map_gif.gif)
