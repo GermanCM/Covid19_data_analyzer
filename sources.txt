@@ -1,0 +1,5 @@
+https://github.com/CSSEGISandData/COVID-19 (with wrong data fixed at https://github.com/GermanCM/COVID-19)
+https://stats.oecd.org/
+https://ourworldindata.org/coronavirus#testing-for-covid-19 
+https://www.worldometers.info/coronavirus/#countries (serious/critical cases) + https://www.worldometers.info/coronavirus/covid-19-testing/
+https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf 
