@@ -41,7 +41,7 @@ class Preprocessor():
             date_new_names = pd.Series(time_columns).apply(self.change_date_format).values
 
             today_date = datetime.today().date()
-            current_data = pd.read_csv(r'.\data\covid19_ts_data.csv')
+            current_data = pd.read_csv(r'..\data\covid19_ts_data.csv')
             current_data.rename(columns={'Unnamed: 0': 'Date'}, inplace=True) 
             current_data.set_index('Date', inplace=True)
             last_date_in_data = current_data.index[-1] 
@@ -171,31 +171,28 @@ class Preprocessor():
                         
                         ts_all_data = ts_all_data.append(ts_country_data)
 
-                    ts_all_data.to_csv(path_or_buf=r'.\data\covid19_ts_data.csv')
+                    ts_all_data.to_csv(path_or_buf=r'..\data\covid19_ts_data.csv')
 
                     last_date_in_data = datetime(ts_all_data.index[-1])
 
                 return ts_all_data
 
             else:
-                current_data = pd.read_csv(r'.\data\covid19_ts_data.csv')
+                current_data = pd.read_csv(r'..\data\covid19_ts_data.csv')
                 current_data.rename(columns={'Unnamed: 0': 'Date'}, inplace=True) 
                 current_data.set_index('Date', inplace=True)
 
                 return current_data
 
         except Exception:
-            current_data = pd.read_csv(r'.\data\covid19_ts_data.csv')
+            current_data = pd.read_csv(r'..\data\covid19_ts_data.csv')
             current_data.rename(columns={'Unnamed: 0': 'Date'}, inplace=True) 
             current_data.set_index('Date', inplace=True)
 
             return current_data
 
 #%%
-'''
-# to "manually" download data
-preprocessor = Preprocessor()
+import pandas as pd
+current_data = pd.read_csv(r'..\data\covid19_ts_data.csv')
 
-ts_all_data = preprocessor.get_current_data(ts_all_data_columns=['Country', 'Latitude', 'Longitude',
-                                    'Confirmed', 'Deaths'])
-'''
+# %%

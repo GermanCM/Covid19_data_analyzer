@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 import datetime
 
-#%%
 st.title('COVID-19 data evolution')
 
 def get_covid_data_csv(preprocessor):
@@ -52,6 +51,7 @@ def main():
         from page_absolute_numbers import absolute_numbers_evolution as abs_evol
         from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as norm_evol
         import numpy as np
+        import streamlit as st
 
         preprocessor = prep.Preprocessor()
         data = load_data(preprocessor)
