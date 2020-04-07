@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 import datetime
 
-#%%
 st.title('COVID-19 data evolution')
 
 def get_covid_data_csv(preprocessor):
@@ -48,6 +47,7 @@ def load_data(preprocessor):
 #%%
 def main():
     try:
+        import streamlit as st
         from data_preprocessor import preprocessor as prep
         from page_absolute_numbers import absolute_numbers_evolution as abs_evol
         from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as norm_evol
@@ -71,7 +71,7 @@ def main():
         if page == "Absolute numbers":
             st.markdown(
                 """
-                ### This is a Covid19 virus data monitor with 2 main goals: 
+                ### This is a Covid19 data monitor with 2 main goals: 
                 > - unifying some useful information from several data sources to get insights at a glance
                 > - trying to make as fair as possible comparisons between countries evolution, with the
                     aim of getting some better understanding, and if possible learn some key factors  

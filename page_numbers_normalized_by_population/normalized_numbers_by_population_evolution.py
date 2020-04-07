@@ -18,7 +18,7 @@ class Normalized_by_population_numbers_evolution():
     def get_population_data(self, multiselection):
         try:
             import pandas as pd 
-            demographic_data = pd.read_csv(r'.\external_data\demographic_population.csv', sep=',')
+            demographic_data = pd.read_csv('https://raw.githubusercontent.com/GermanCM/Covid19_data_analyzer/master/external_data/demographic_population.csv', sep=',')
             population_countries_df = pd.DataFrame()
             desired_cols = ['Country', 'SEX', 'AGE', 'TIME' , 'Value']
 
@@ -44,7 +44,7 @@ class Normalized_by_population_numbers_evolution():
     def get_elderly_population_data(self, multiselection):
         try:
             import pandas as pd 
-            elderly_demographic_data = pd.read_csv(r'.\external_data\demographic_age_over_65.csv', sep=',')
+            elderly_demographic_data = pd.read_csv('https://raw.githubusercontent.com/GermanCM/Covid19_data_analyzer/master/external_data/demographic_age_over_65.csv', sep=',')
             elderly_population_countries_df = pd.DataFrame()
             desired_columns = ['Variable', 'Measure', 'Country', 'Year', 'Value']
 
