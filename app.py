@@ -47,11 +47,11 @@ def load_data(preprocessor):
 #%%
 def main():
     try:
+        import streamlit as st
         from data_preprocessor import preprocessor as prep
         from page_absolute_numbers import absolute_numbers_evolution as abs_evol
         from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as norm_evol
         import numpy as np
-        import streamlit as st
 
         preprocessor = prep.Preprocessor()
         data = load_data(preprocessor)
