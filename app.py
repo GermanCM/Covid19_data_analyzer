@@ -71,7 +71,7 @@ def main():
         if page == "Absolute numbers":
             st.markdown(
                 """
-                ### This is a Covid19 virus data monitor with 2 main goals: 
+                ### This is a Covid19 data monitor with 2 main goals: 
                 > - unifying some useful information from several data sources to get insights at a glance
                 > - trying to make as fair as possible comparisons between countries evolution, with the
                     aim of getting some better understanding, and if possible learn some key factors  
