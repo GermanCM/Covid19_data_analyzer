@@ -182,15 +182,15 @@ def main():
             import pandas as pd
 
             country_options = list(data.Country.unique())
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", 
-                                            options=country_options, default=default_countries_list[:2])
+            multiselection = st.multiselect("Select countries (displayed by default the 4 top ones by number of informed infections):", 
+                                            options=country_options, default=default_countries_list[:4])
 
             health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
             tests_and_deaths_figure = health_data_comparer_obj.return_tests_and_deaths_violin_figure(multiselection)
 
             st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
-            st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries wit low deaths rates*')
-
+            st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates*')
+            st.write(':bulb: *The width of each counry violin represents the ratio of tests made on the date for the y axis*') 
             st.plotly_chart(tests_and_deaths_figure)
 
             #st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
