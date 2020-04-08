@@ -1,4 +1,11 @@
 #%%
+import logging
+
+logging.basicConfig(filename='covi19_dashboarder.log',
+                    level=logging.ERROR, 
+                    format='%(asctime)s %(message)s')
+logger = logging.getLogger("covi19_dashboarder")
+
 class Preprocessor():
     def __init__(self):
         from pathlib import Path
@@ -24,11 +31,7 @@ class Preprocessor():
             from tqdm import tqdm
             import pandas as pd
             import numpy as np
-            '''
-            ### Dataframe a rellenar 
-            ts_all_data = pd.DataFrame(columns=['Country', 'Latitude', 'Longitude',
-                                                'Confirmed', 'Deaths'])
-            '''
+            
             ####################TIME SERIES FILES
             DATA_PATH_CONFIRMED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
             DATA_PATH_DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
@@ -169,11 +172,13 @@ class Preprocessor():
 
                         ts_country_data['Confirmed']=this_country_ts_CONFIRMED_values
                         ts_country_data['Deaths']=this_country_ts_DEATHS_values
-                        #ts_country_data['Recovered']=ts_recovered_values[countries_dict[country]]
-                        
+
+                        if ts_country_data['Country'] =='Korea, South':
+                            ts_country_data['Country']= 'South Korea'
+
                         ts_all_data = ts_all_data.append(ts_country_data)
 
-                    ts_all_data.to_csv(path_or_buf=r'..\data\covid19_ts_data.csv')
+                    ts_all_data.to_csv(path_or_buf=r'.\data\covid19_ts_data.csv')
                     
                     last_date_in_data = datetime(ts_all_data.index[-1])
 
@@ -186,7 +191,9 @@ class Preprocessor():
 
                 return current_data
 
-        except Exception:
+        except Exception as exc:
+            logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'get_current_data', exc))
+
             current_data = pd.read_csv(self.final_data_path_)
             current_data.rename(columns={'Unnamed: 0': 'Date'}, inplace=True) 
             current_data.set_index('Date', inplace=True)

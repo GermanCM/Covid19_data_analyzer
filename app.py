@@ -57,7 +57,7 @@ def main():
         data = load_data(preprocessor)
         
         page = st.sidebar.radio("Choose a page", ("Absolute numbers", "Numbers normalized by population", 
-                                                  "Demographics & tests impact", "Underlying health conditions & health investments"))
+                                                  "Elderly impact", "Tests data", "Underlying health conditions & health investments"))
         
         # Default select: the top countries ordered by cumulative cases
         last_date_in_data = data.index[-1]
@@ -147,7 +147,7 @@ def main():
             st.plotly_chart(fig_normalized_increments_bars)
 
        
-        elif page=="Demographics & tests impact":
+        elif page=="Elderly impact":
             country_options = list(data.Country.unique())
 
             multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections + China as a reference):", 
@@ -176,12 +176,37 @@ def main():
             st.subheader('Deaths over elderly population ratio')
             st.write('*The goal of this chart is to show the effectiveness on the health system per country, based on deaths/elderly population ratio*')
             st.plotly_chart(health_elderly_impact_ratio_fig)
-            
-            st.write('*More content to come soon*')
+
+        elif page=="Tests data":
+            from page_health_data import health_data_comparer
+            import pandas as pd
+
+            country_options = list(data.Country.unique())
+            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", 
+                                            options=country_options, default=default_countries_list[:2])
+
+            health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
+            tests_and_deaths_figure = health_data_comparer_obj.return_tests_and_deaths_violin_figure(multiselection)
+
+            st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
+            st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries wit low deaths rates*')
+
+            st.plotly_chart(tests_and_deaths_figure)
+
+            #st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
+
+            selected_country_mask = [x in multiselection for x in data.Country]
+            selected_countries_data = data[selected_country_mask]
+
+            norm_evol_obj = norm_evol.Normalized_by_population_numbers_evolution(data)
+           
+            # EVOLUTION LINE CHARTS
+            fig_normalized_lines_chart = norm_evol_obj.return_normalized_lines_evolution_figure(selected_countries_data, multiselection)
+            st.plotly_chart(fig_normalized_lines_chart)
+
 
         elif page=="Underlying health conditions & health investments":
     
-
             #st.subheader('Infections VS Tests ratio--> NORMALIZAR!')
             
             #tests_data = pd.read_csv(r'.\external_data\tests-vs-confirmed-cases-covid-19.csv', sep=';')
