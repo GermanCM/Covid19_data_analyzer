@@ -190,7 +190,7 @@ def main():
 
             st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
             st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates*')
-            st.write(':bulb: *The width of each counry violin represents the ratio of tests made on the date for the y axis*') 
+            st.write(':bulb: *The width of each country violin represents the ratio of tests made the corresponding date on the y axis*') 
             st.plotly_chart(tests_and_deaths_figure)
 
             #st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
