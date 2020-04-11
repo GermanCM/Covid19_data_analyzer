@@ -102,13 +102,13 @@ class Normalized_by_population_numbers_evolution():
             import pandas as pd 
 
             population_countries_df = self.get_population_data(multiselection)
-
+        
             fig = make_subplots(rows=2, cols=1, subplot_titles=("Confirmed cases normalized by population", "Deaths normalized by population"))
 
-            for country_i in multiselection:
+            for country_i in population_countries_df.Country.values:
                 country_population = population_countries_df[population_countries_df.Country==country_i]['Value']
                 country_data = selected_countries_data[selected_countries_data.Country==country_i]
-
+                
                 country_data.Confirmed=country_data.Confirmed.apply(lambda x: 1000*(x/country_population)).round(2)
                 country_data.Deaths=country_data.Deaths.apply(lambda x: 1000*(x/country_population)).round(2)
 
@@ -125,7 +125,7 @@ class Normalized_by_population_numbers_evolution():
             return fig
 
         except Exception as exc:
-            logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'return_lines_evolution_figure', exc))
+            logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'return_normalized_lines_evolution_figure', exc))
 
 
     def return_normalized_bars_increments_evolution_figure(self, selected_countries_data, multiselection):

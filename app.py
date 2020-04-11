@@ -65,8 +65,11 @@ def main():
         data['date'] = data.index
 
         top_countries_list = last_day_data.sort_values(by=['Confirmed'], ascending=False)['Country'].unique()[:3]
-        default_countries_array = np.append(top_countries_list, np.array(['China']))
-        default_countries_list = list(default_countries_array) 
+        default_countries_list = list(top_countries_list) 
+        top_countries_list_elderly = last_day_data.sort_values(by=['Deaths'], ascending=False)['Country'].unique()[:10]
+        default_countries_list_elderly = list(top_countries_list_elderly) 
+        top_countries_list_tests = last_day_data.sort_values(by=['Deaths'], ascending=False)['Country'].unique()[:8]
+        default_countries_list_tests = list(top_countries_list_tests)
 
         if page == "Absolute numbers":
             st.markdown(
@@ -101,7 +104,7 @@ def main():
             > increments per day of confirmed infections and deaths
             """)
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections + China as a reference):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", #+ China as a reference):", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -127,7 +130,7 @@ def main():
             st.write(':mag: *These charts show the same values normalized by population to make a fair comparison between countries. \
             You can see here different numbers, showing the proportional impact based on their population*')
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections + China as a reference):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", #+ China as a reference):", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -148,19 +151,22 @@ def main():
 
        
         elif page=="Elderly impact":
+
             country_options = list(data.Country.unique())
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections + China as a reference):", 
-                                            options=country_options, default=default_countries_list)
+            multiselection_elderly = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", #+ China as a reference):", 
+                                            options=country_options, default=default_countries_list_elderly)
 
             from page_health_data import health_data_comparer
             import pandas as pd
             
             health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
-            health_impact_ratio_fig = health_data_comparer_obj.get_current_deaths_confirmed_infections_impact(multiselection)
+            health_impact_ratio_fig = health_data_comparer_obj.get_current_deaths_confirmed_infections_impact(multiselection_elderly)
 
             st.subheader('Deaths over confirmed infections ratio')
-            st.write('*The goal of this chart is to show the effectiveness on the health system per country, based only on deaths/confirmed cases ratio*')
+            st.write('*The goal of this chart is to show the effectiveness of the health system per country, based only on deaths/confirmed cases ratio*')
+            st.write(':pencil: *Definition:*')
+            st.markdown("""$$health\_impact = {deaths \over confirmed\_infections}$$""")
 
             st.plotly_chart(health_impact_ratio_fig)
 
@@ -169,62 +175,62 @@ def main():
             from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as norm_evol
             
             norm_evol_obj = norm_evol.Normalized_by_population_numbers_evolution(data)
-            abs_elderly_population_numbers = norm_evol_obj.get_absolute_elderly_population_numbers(multiselection)
+            abs_elderly_population_numbers = norm_evol_obj.get_absolute_elderly_population_numbers(multiselection_elderly)
             
-            health_elderly_impact_ratio_fig = health_data_comparer_obj.get_current_deaths_elderly_impact(multiselection, abs_elderly_population_numbers)
+            health_elderly_impact_ratio_fig = health_data_comparer_obj.get_current_deaths_elderly_impact(multiselection_elderly, abs_elderly_population_numbers)
 
-            st.subheader('Deaths over elderly population ratio')
+            st.subheader('Impact on the elderly population')
             st.write('*The goal of this chart is to show the effectiveness on the health system per country, based on deaths/elderly population ratio*')
+            st.write(':pencil: *Definitions:*')
+            st.markdown("""$$elderly\_population = {population\_80\_years\_old\_and\_over}$$  ,  $$elderly\_health\_impact = {deaths \over elderly\_population}$$""")
             st.plotly_chart(health_elderly_impact_ratio_fig)
+
+            #st.write(':thought_balloon: *As we could expect, the real impact *')
 
         elif page=="Tests data":
             from page_health_data import health_data_comparer
             import pandas as pd
 
             country_options = list(data.Country.unique())
-            multiselection = st.multiselect("Select countries (displayed by default the 4 top ones by number of informed infections):", 
-                                            options=country_options, default=default_countries_list[:4])
+            multiselection_tests = st.multiselect("Select countries (displayed by default the 4 top ones by number of informed infections):", 
+                                            options=country_options, default=default_countries_list_tests)
 
             health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
-            tests_and_deaths_figure = health_data_comparer_obj.return_tests_and_deaths_violin_figure(multiselection)
+            violin_tests_data_figure = health_data_comparer_obj.return_tests_and_deaths_violin_figure(multiselection_tests)
 
             st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
             st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates*')
             st.write(':bulb: *The width of each country violin represents the ratio of tests made the corresponding date on the y axis*') 
-            st.plotly_chart(tests_and_deaths_figure)
+            st.write(':warning: *Not all countries have officially informed tests data yet*')
+            st.plotly_chart(violin_tests_data_figure)
 
             #st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
 
-            selected_country_mask = [x in multiselection for x in data.Country]
+            selected_country_mask = [x in multiselection_tests for x in data.Country]
             selected_countries_data = data[selected_country_mask]
 
             norm_evol_obj = norm_evol.Normalized_by_population_numbers_evolution(data)
            
             # EVOLUTION LINE CHARTS
-            fig_normalized_lines_chart = norm_evol_obj.return_normalized_lines_evolution_figure(selected_countries_data, multiselection)
+            fig_normalized_lines_chart = norm_evol_obj.return_normalized_lines_evolution_figure(selected_countries_data, multiselection_tests)
             st.plotly_chart(fig_normalized_lines_chart)
 
 
         elif page=="Underlying health conditions & health investments":
-    
-            #st.subheader('Infections VS Tests ratio--> NORMALIZAR!')
+            from page_health_data import health_data_comparer
+
+            country_options = list(data.Country.unique())
+            multiselection_health_conditions = st.multiselect("Select countries:", options=country_options, default=default_countries_list_tests)
             
-            #tests_data = pd.read_csv(r'.\external_data\tests-vs-confirmed-cases-covid-19.csv', sep=';')
-            #not_nan_tests_mask = (tests_data.isna()['Total_COVID19_tests']==False)&(tests_data.isna()['Total_confirmed_cases']==False)
-            #tests_data_filt = tests_data[not_nan_tests_mask]
-            #tests_data_filt['Impact_ratio'] = (tests_data_filt['Total_confirmed_cases']*100/tests_data_filt['Total_COVID19_tests'])
+            health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
+            deaths_vs_respiratory_morbidity_fig = health_data_comparer_obj.return_deaths_vs_respiratory_morbidity_fig(multiselection_health_conditions)
 
-            #import plotly.express as px
+            st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
+            st.write('*The goal of this chart is to show the influence of underlying respiratory deaths rate on Covid19 deaths per country*')
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is*') 
+            st.write(':warning: *Not all countries have officially informed underlying health conditions*')
 
-            #fig_tests = px.scatter(tests_data_filt, x="Total_COVID19_tests", 
-            #                               y="Total_confirmed_cases", 
-            #                               color="Impact_ratio",
-            #                               size='Impact_ratio', hover_data=['Entity'])
-            
-            #fig_tests.update_layout(margin={"r":10,"t":60,"l":10,"b":2}, height=450, width=710, showlegend=False, paper_bgcolor="#EBF2EC") #legend=dict(x=-.18, y=1))         
-            #st.plotly_chart(fig_tests)
-
-            st.write(':construction: *Under construction, content coming soon*')
+            st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
                 
     except Exception as exc:
         st.write('**There was an error loading the requested data**')
