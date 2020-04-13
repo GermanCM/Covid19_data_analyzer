@@ -240,6 +240,10 @@ def main():
 if __name__ == "__main__":
     main()
 
+st.write(':information_source: *data sources: *') 
+st.markdown(body="""Covid19 data evolution: <a href="https://github.com/CSSEGISandData/COVID-19"> Data Repository by Johns Hopkins CSSE</a> """, unsafe_allow_html=True)
+st.markdown(body="""External data sources: <a href="https://ourworldindata.org/"> ourworldindata.org</a>, <a href="https://stats.oecd.org/"> stats.oecd.org</a> """, unsafe_allow_html=True)
+
 st.markdown("""___""")
 
 st.markdown(body="""
