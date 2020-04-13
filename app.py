@@ -225,7 +225,7 @@ def main():
             health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
             deaths_vs_respiratory_morbidity_fig = health_data_comparer_obj.return_deaths_vs_respiratory_morbidity_fig(multiselection_health_conditions)
 
-            st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
+            st.subheader('Deaths rate VS Underlying health conditions')
             st.write('*The goal of this chart is to show the influence of underlying respiratory deaths rate on Covid19 deaths per country*')
             st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is*') 
             st.write(':warning: *Not all countries have officially informed underlying health conditions*')
@@ -243,5 +243,13 @@ if __name__ == "__main__":
 st.markdown("""___""")
 
 st.markdown(body="""
-<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"> Creative Commons Attribution 4.0 International License</a>
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />Licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"> Creative Commons Attribution 4.0 International License</a>
+""", unsafe_allow_html=True)
+
+st.markdown(body="""
+GitHub content: <a href="https://github.com/GermanCM/Covid19_data_analyzer"> GermanCM github account</a>
+""", unsafe_allow_html=True)
+
+st.markdown(body="""
+Contact info: <a href="https://www.linkedin.com/feed/"> LinkedIn account</a>
 """, unsafe_allow_html=True)
