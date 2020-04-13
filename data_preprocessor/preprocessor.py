@@ -173,8 +173,9 @@ class Preprocessor():
                         ts_country_data['Confirmed']=this_country_ts_CONFIRMED_values
                         ts_country_data['Deaths']=this_country_ts_DEATHS_values
 
-                        if ts_country_data['Country'] =='Korea, South':
-                            ts_country_data['Country']= 'South Korea'
+                        if 'Korea, South' in ts_country_data['Country']:
+                            korea_mask = ts_country_data['Country']=='Korea, South'
+                            ts_country_data[korea_mask]['Country']= 'South Korea'
 
                         ts_all_data = ts_all_data.append(ts_country_data)
 
