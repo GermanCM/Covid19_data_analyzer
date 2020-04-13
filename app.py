@@ -251,9 +251,9 @@ st.markdown(body="""
 """, unsafe_allow_html=True)
 
 st.markdown(body="""
-GitHub content: <a href="https://github.com/GermanCM/Covid19_data_analyzer"> GermanCM github account</a>
+GitHub content: <a href="https://github.com/GermanCM/Covid19_data_analyzer"> GermanCM github repository</a>
 """, unsafe_allow_html=True)
 
 st.markdown(body="""
-Contact info: <a href="https://www.linkedin.com/feed/"> LinkedIn account</a>
+Contact info: <a href="https://www.linkedin.com/in/german-cm/"> LinkedIn account</a>
 """, unsafe_allow_html=True)
