@@ -57,7 +57,7 @@ def main():
         data = load_data(preprocessor)
         
         page = st.sidebar.radio("Choose a page", ("Absolute numbers", "Numbers normalized by population", 
-                                                  "Elderly impact", "Tests data", "Underlying health conditions & health investments"))
+                                                  "Deaths impact", "Tests data", "Underlying health conditions"))
         
         # Default select: the top countries ordered by cumulative cases
         last_date_in_data = data.index[-1]
@@ -150,7 +150,7 @@ def main():
             st.plotly_chart(fig_normalized_increments_bars)
 
        
-        elif page=="Elderly impact":
+        elif page=="Deaths impact":
 
             country_options = list(data.Country.unique())
 
@@ -216,7 +216,7 @@ def main():
             st.plotly_chart(fig_normalized_lines_chart)
 
 
-        elif page=="Underlying health conditions & health investments":
+        elif page=="Underlying health conditions":
             from page_health_data import health_data_comparer
 
             country_options = list(data.Country.unique())
@@ -231,6 +231,8 @@ def main():
             st.write(':warning: *Not all countries have officially informed underlying health conditions*')
 
             st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
+
+            st.write('*More info coming about investments on health system per country*')
                 
     except Exception as exc:
         st.write('**There was an error loading the requested data**')
