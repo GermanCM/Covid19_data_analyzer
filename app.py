@@ -203,7 +203,7 @@ def main():
             violin_tests_data_figure = health_data_comparer_obj.return_tests_and_deaths_violin_figure(multiselection_tests)
 
             st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
-            st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates*')
+            st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates; the width of each country violin is proportional the number of tests carried out at that date on the y-axis*')
             st.write(':bulb: *The width of each country violin represents the ratio of tests made the corresponding date on the y axis*') 
             st.write(':warning: *Not all countries have officially informed tests data yet*')
             st.plotly_chart(violin_tests_data_figure)
