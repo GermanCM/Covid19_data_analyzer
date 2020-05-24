@@ -126,13 +126,17 @@ class Health_impact_evolution():
     def return_tests_and_deaths_violin_figure(self, multiselection):
         try:
             import pandas as pd
+            import math
             import plotly.express as px
             from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as population_num
 
             multiselection_tests_data = ['United States' if x=='US' else x for x in multiselection]
             selected_countries_tests_data = self.get_tests_evolution_data(multiselection_tests_data)
 
-            selected_countries_tests_data['Cumulative total per thousand']=selected_countries_tests_data['Cumulative total per thousand'].apply(int)
+            not_nan_mask = pd.isna(selected_countries_tests_data['Cumulative total per thousand'])==False
+            selected_countries_tests_data=selected_countries_tests_data[not_nan_mask]
+
+            selected_countries_tests_data['Cumulative total per thousand']=selected_countries_tests_data['Cumulative total per thousand'].apply(lambda x: int(x) if math.isnan(x)==False else x)
             
             desired_cols = ['Date', 'Country', 'Cumulative total per thousand']
             tests_sub_data = selected_countries_tests_data[desired_cols]
