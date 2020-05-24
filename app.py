@@ -57,14 +57,15 @@ def main():
         data = load_data(preprocessor)
         
         page = st.sidebar.radio("Choose a page", ("Absolute numbers", "Numbers normalized by population", 
-                                                  "Deaths impact", "Tests data", "Underlying health conditions"))
+                                                  "Deaths impact", "Tests data", "Underlying health conditions",
+                                                  "Health investment"))
         
         # Default select: the top countries ordered by cumulative cases
         last_date_in_data = data.index[-1]
         last_day_data = data.loc[last_date_in_data]
         data['date'] = data.index
 
-        top_countries_list = last_day_data.sort_values(by=['Confirmed'], ascending=False)['Country'].unique()[:3]
+        top_countries_list = last_day_data.sort_values(by=['Confirmed'], ascending=False)['Country'].unique()[:5]
         default_countries_list = list(top_countries_list) 
         top_countries_list_elderly = last_day_data.sort_values(by=['Deaths'], ascending=False)['Country'].unique()[:10]
         default_countries_list_elderly = list(top_countries_list_elderly) 
@@ -76,22 +77,24 @@ def main():
                 """
                 ### This is a Covid19 data monitor with 2 main goals: 
                 > - unifying some useful information from several data sources to get insights at a glance
-                > - trying to make as fair as possible comparisons between countries evolution, with the
-                    aim of getting some better understanding, and if possible learn some key factors  
+                > - trying to make as fair as possible comparisons between countries evolution and not comparing just absolute numbers, 
+                    with the aim of getting some better understanding, and analyze some possible relevant factors  
                 """)
-            st.write(':warning: *keep in mind that these data is being collected with a high degree of urgency and surely with different criteria among countries, which could affect \
+            st.write(':warning: *keep in mind these data are being collected with a high degree of urgency and surely with different criteria among countries, which could affect \
                     some conclusions drawn from it*')
             st.markdown("""
-                        > The map below shows the evolution of absolute numbers of confirmed infections and deaths 
-                        """)
+                        > The map below shows the evolution of absolute numbers of confirmed infections and deaths. As we can see, it has actually become a pandemic due to the spread over the continents (below the pandemic definition).  
+                        <a href="https://en.wikipedia.org/wiki/Pandemic"> Pandemic definition</a>""", unsafe_allow_html=True)
+            #st.markdown(body="""<a href="https://en.wikipedia.org/wiki/Pandemic"> Pandemic definition</a>""", unsafe_allow_html=True)
+
             # MAP plot
-            map_data_dict = {'Confirmed infections': 'Confirmed', 'Confirmed deaths': 'Deaths'} #, 'Confirmed recoverings': 'Recovered'}
-            map_data_option = st.selectbox('Select data to show on the map', ('Confirmed infections', 'Confirmed deaths')) #, 'Confirmed recoverings'))
+            map_data_dict = {'Confirmed infections': 'Confirmed', 'Confirmed deaths': 'Deaths'} 
+            map_data_option = st.selectbox('Select data to show on the map', ('Confirmed infections', 'Confirmed deaths')) 
             
             abs_numbers_evol_obj = abs_evol.Absolute_numbers_evolution(data)
             fig_map = abs_numbers_evol_obj.return_map_evolution_figure(map_data_dict, map_data_option)
 
-            st.write(':bulb: *Close the pages menu on the left or click on the fullscreen icon (expand symbol on the image) for a better view* ') 
+            st.write(':bulb: *Click on the __play__ icon to see the evolution. Close the pages menu on the left or click on the fullscreen icon for a better view* ') 
                         
             st.plotly_chart(fig_map)
 
@@ -104,7 +107,7 @@ def main():
             > increments per day of confirmed infections and deaths
             """)
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", #+ China as a reference):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 5 top ones by number of informed infections):", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -130,7 +133,7 @@ def main():
             st.write(':mag: *These charts show the same values normalized by population to make a fair comparison between countries. \
             You can see here different numbers, showing the proportional impact based on their population*')
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", #+ China as a reference):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -146,6 +149,7 @@ def main():
 
             # INCREMENTS PER DAY
             st.write(':thought_balloon: *The normalized increments per day can give us a more realistic view of the proportional impact per country* ') 
+            st.write(':warning: *Data is shown as informed by the Johns Hopkins University via its github repository with no correction made. Do not hesitate to contact via the channels shown at the footnotes*')
             fig_normalized_increments_bars = norm_evol_obj.return_normalized_bars_increments_evolution_figure(selected_countries_data, multiselection)
             st.plotly_chart(fig_normalized_increments_bars)
 
@@ -227,18 +231,35 @@ def main():
 
             st.subheader('Deaths rate VS Underlying health conditions')
             st.write('*The goal of this chart is to show the influence of underlying respiratory deaths rate on Covid19 deaths per country*')
-            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is*') 
+            st.write('*On the x-axis, you can see the respiratory deaths rate per country, and the death rate due to covid on the y-axis*')
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add mopre countries via the Select countries search box*') 
             st.write(':warning: *Not all countries have officially informed underlying health conditions*')
 
             st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
 
             st.write('*More info coming about investments on health system per country*')
+
+        elif page=="Health investment":
+            from page_health_data import health_data_comparer
+
+            country_options = list(data.Country.unique())
+            multiselection_health_conditions = st.multiselect("Select countries:", options=country_options, default=default_countries_list_tests)
+            
+            health_data_comparer_obj = health_data_comparer.Health_impact_evolution(data)
+            deaths_vs_respiratory_morbidity_fig = health_data_comparer_obj.return_deaths_vs_health_investment_share_fig(multiselection_health_conditions)
+
+            st.subheader('Deaths rate VS Investments on health sector')
+            st.write('*The goal of this chart is to show the influence of health investments per country on Covid19 deaths per country.*')
+            st.write('*On the x-axis, you can see the share of gross domestic product for the health sector per country, and the death rate due to covid on the y-axis*')
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add mopre countries via the Select countries search box*') 
+
+            st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
                 
     except Exception as exc:
         st.write('**There was an error loading the requested data**')
         logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'main', exc))
 
-
+#%%
 if __name__ == "__main__":
     main()
 

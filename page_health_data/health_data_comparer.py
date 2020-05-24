@@ -129,9 +129,6 @@ class Health_impact_evolution():
             import plotly.express as px
             from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as population_num
 
-            #norm_nums_obj = population_num.Normalized_by_population_numbers_evolution(self.data_)
-            #population_countries_df = norm_nums_obj.get_population_data(multiselection)
-
             multiselection_tests_data = ['United States' if x=='US' else x for x in multiselection]
             selected_countries_tests_data = self.get_tests_evolution_data(multiselection_tests_data)
 
@@ -187,9 +184,9 @@ class Health_impact_evolution():
 
             respiratory_deaths_rates_df=respiratory_deaths_rates_df[desired_cols]
             respiratory_deaths_rates_df = respiratory_deaths_rates_df.groupby(by='Country').sum()
-            # %%
+            
             respiratory_deaths_rates_df['Country']=respiratory_deaths_rates_df.index
-            available_countries = respiratory_deaths_rates_df.Country.unique()
+            #available_countries = respiratory_deaths_rates_df.Country.unique()
 
             norm_nums_obj = population_num.Normalized_by_population_numbers_evolution(self.data_)
             population_countries_df = norm_nums_obj.get_population_data(multiselection)
@@ -223,50 +220,52 @@ class Health_impact_evolution():
         except Exception as exc:
             logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'return_deaths_vs_respiratory_morbidity_fig', exc))
 
+    def return_deaths_vs_health_investment_share_fig(self, multiselection):
+        try:
+            import pandas as pd 
+            import numpy as np
+            import plotly.express as px
+            from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as population_num
 
-'''
-#%%
-import pandas as pd 
-from page_numbers_normalized_by_population import normalized_numbers_by_population_evolution as population_num
+            health_investment_shares_df = pd.read_csv('https://raw.githubusercontent.com/GermanCM/Covid19_data_analyzer/master/external_data/health_investments.csv', sep=';')
+            desired_cols=['Country', 'Year', 'Value']
+        
+            health_investment_shares_df=health_investment_shares_df[desired_cols]
 
-respiratory_deaths_rates_df = pd.read_csv('https://raw.githubusercontent.com/GermanCM/Covid19_data_analyzer/master/external_data/respiratory_deaths_rates.csv', sep=',')
-desired_cols=['Country', 'Value']
-health_condition='Diseases of the respiratory system + Influenza + Pneumonia'
-measure = 'Deaths per 100 000 population (standardised rates)'
+            weights=[i/len(health_investment_shares_df) for i in range(len(health_investment_shares_df))]
 
-respiratory_deaths_rates_df=respiratory_deaths_rates_df[desired_cols]
-respiratory_deaths_rates_df = respiratory_deaths_rates_df.groupby(by='Country').sum()
-# %%
-respiratory_deaths_rates_df['Country']=respiratory_deaths_rates_df.index
-available_countries = respiratory_deaths_rates_df.Country.unique()
+            health_investment_shares_df['Value'] = np.multiply(weights, health_investment_shares_df['Value'].values)
+            health_investment_shares_df = health_investment_shares_df.groupby(by='Country').mean()
+            health_investment_shares_df['Country']=health_investment_shares_df.index
 
-norm_nums_obj = population_num.Normalized_by_population_numbers_evolution(covid_data)
-population_countries_df = norm_nums_obj.get_population_data(multiselection)
+            norm_nums_obj = population_num.Normalized_by_population_numbers_evolution(self.data_)
+            population_countries_df = norm_nums_obj.get_population_data(multiselection)
 
-country_covid_norm_data  = pd.DataFrame()
-for country_i in multiselection:
-    country_population = population_countries_df[population_countries_df.Country==country_i]['Value']
-    country_covid_norm_data_country = covid_data[covid_data.Country==country_i]
-    country_covid_norm_data_country.Deaths=country_covid_norm_data_country.Deaths.apply(lambda x: 1000*(x/country_population)).round(2)
-    country_covid_norm_data=country_covid_norm_data.append(country_covid_norm_data_country)
+            country_covid_norm_data  = pd.DataFrame()
+            for country_i in population_countries_df.Country.values:
+                country_population = population_countries_df[population_countries_df.Country==country_i]['Value']
+                country_covid_norm_data_country = self.data_[self.data_.Country==country_i]
+                country_covid_norm_data_country.Deaths=country_covid_norm_data_country.Deaths.apply(lambda x: 1000*(x/country_population)).round(2)
+                country_covid_norm_data=country_covid_norm_data.append(country_covid_norm_data_country)
 
-country_covid_norm_data #[country_covid_norm_data.Country=='US'].Country = 'United States'
+            selected_country_mask = [x in multiselection for x in country_covid_norm_data.Country]
+            selected_countries_data = country_covid_norm_data[selected_country_mask]
+            last_date = selected_countries_data.index[-1]
+            covid_norm_last_date = selected_countries_data[selected_countries_data.index == last_date]
 
-#%%
-selected_country_mask = [x in multiselection for x in country_covid_norm_data.Country]
-selected_countries_data = country_covid_norm_data[selected_country_mask]
+            health_investment_shares_df.reset_index(drop=True, inplace=True)
+            covid_norm_resp_df = covid_norm_last_date[['Country', 'Deaths']].merge(health_investment_shares_df[['Country', 'Value']], 
+                                                        how='inner', on='Country')
 
-last_date = selected_countries_data.index[-1]
+            covid_norm_resp_df = covid_norm_resp_df.rename(columns={'Value': 'Investments_on_health',
+                                                                    'Deaths': 'Covid_deaths_rate'})
 
-covid_norm_last_date = selected_countries_data[selected_countries_data.index == last_date]
+            fig = px.scatter(covid_norm_resp_df, x="Investments_on_health", y="Covid_deaths_rate", color="Covid_deaths_rate",
+                            size='Covid_deaths_rate', hover_data=['Country'])
+            
+            fig.update_layout(margin={"r":10,"t":60,"l":10,"b":2}, height=450, width=710, showlegend=False, paper_bgcolor="#EBF2EC")
 
-# %%
-respiratory_deaths_rates_df.reset_index(drop=True, inplace=True)
-covid_norm_resp_df = covid_norm_last_date[['Country', 'Deaths']].merge(respiratory_deaths_rates_df[['Country', 'Value']], 
-                                            how='inner', on='Country')
+            return fig
 
-covid_norm_resp_df = covid_norm_resp_df.rename(columns={'Value': 'Respiratory_death_rate',
-                                                        'Deaths': 'Covid_deaths'})
-covid_norm_resp_df
-'''
-
+        except Exception as exc:
+            logger.exception('raised exception at {}: {}'.format(logger.name+'.'+ 'return_deaths_vs_health_investment_share_fig', exc))
