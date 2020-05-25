@@ -251,7 +251,7 @@ def main():
             st.subheader('Deaths rate VS Investments on health sector')
             st.write('*The goal of this chart is to show the influence of health investments per country on Covid19 deaths per country.*')
             st.write('*On the x-axis, you can see the share of gross domestic product for the health sector per country, and the death rate due to covid on the y-axis*')
-            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add mopre countries via the Select countries search box*') 
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add more countries via the Select countries search box*') 
 
             st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
                 
