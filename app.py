@@ -107,7 +107,7 @@ def main():
             > increments per day of confirmed infections and deaths
             """)
 
-            multiselection = st.multiselect("Select countries (displayed by default the 5 top ones by number of informed infections):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries via the __Select countries__ search box:", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -133,7 +133,7 @@ def main():
             st.write(':mag: *These charts show the same values normalized by population to make a fair comparison between countries. \
             You can see here different numbers, showing the proportional impact based on their population*')
 
-            multiselection = st.multiselect("Select countries (displayed by default the 3 top ones by number of informed infections):", 
+            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries via the __Select countries__ search box:", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -168,7 +168,7 @@ def main():
             health_impact_ratio_fig = health_data_comparer_obj.get_current_deaths_confirmed_infections_impact(multiselection_elderly)
 
             st.subheader('Deaths over confirmed infections ratio')
-            st.write('*The goal of this chart is to show the effectiveness of the health system per country, based only on deaths/confirmed cases ratio*')
+            st.write('*The goal of this chart is to show the effectiveness of the health system per country, based only on deaths/confirmed cases ratio. You can add more countries via the __Select countries__ search box*')
             st.write(':pencil: *Definition:*')
             st.markdown("""$$health\_impact = {deaths \over confirmed\_infections}$$""")
 
@@ -204,7 +204,7 @@ def main():
 
             st.subheader('Cumulative tests over time per country VS Cumulative deaths over time per country')
             st.write('*The goal of this chart is to show the impact of tests, and seeing a possible correlation between early tests and countries with low deaths rates; the width of each country violin is proportional the number of tests carried out at that date on the y-axis*')
-            st.write(':bulb: *The width of each country violin represents the ratio of tests made the corresponding date on the y axis*') 
+            st.write(':bulb: *The width of each country violin represents the ratio of tests made the corresponding date on the y axis. You can add more countries via the __Select countries__ search box*') 
             st.write(':warning: *Not all countries have officially informed tests data yet*')
             st.plotly_chart(violin_tests_data_figure)
 
@@ -232,7 +232,7 @@ def main():
             st.subheader('Deaths rate VS Underlying health conditions')
             st.write('*The goal of this chart is to show the influence of underlying respiratory deaths rate on Covid19 deaths per country*')
             st.write('*On the x-axis, you can see the respiratory deaths rate per country, and the death rate due to covid on the y-axis*')
-            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add more countries via the Select countries search box*') 
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add more countries via the __Select countries__ search box*') 
             st.write(':warning: *Not all countries have officially informed underlying health conditions*')
 
             st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
@@ -251,7 +251,7 @@ def main():
             st.subheader('Deaths rate VS Investments on health sector')
             st.write('*The goal of this chart is to show the influence of health investments per country on Covid19 deaths per country.*')
             st.write('*On the x-axis, you can see the share of gross domestic product for the health sector per country, and the death rate due to covid on the y-axis*')
-            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add more countries via the Select countries search box*') 
+            st.write(':bulb: *The bigger and yellower a bubble is, the higher the deaths rate is. Can we see any possible correlation? You can add more countries via the __Select countries__ search box*') 
 
             st.plotly_chart(deaths_vs_respiratory_morbidity_fig)
                 
