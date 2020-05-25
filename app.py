@@ -107,7 +107,7 @@ def main():
             > increments per day of confirmed infections and deaths
             """)
 
-            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries via the __Select countries__ search box:", 
+            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries:", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
@@ -133,7 +133,7 @@ def main():
             st.write(':mag: *These charts show the same values normalized by population to make a fair comparison between countries. \
             You can see here different numbers, showing the proportional impact based on their population*')
 
-            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries via the __Select countries__ search box:", 
+            multiselection = st.multiselect("Select countries (displayed by default the 5 countries with the highest number of informed infections), you can add more countries:", 
                                             options=country_options, default=default_countries_list)
 
             st.write(':bulb: *Click on the chart option **compare data on hover** to see all countries data at once and fullscreen icon for a better view* ') 
